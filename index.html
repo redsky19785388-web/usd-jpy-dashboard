@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USD/JPY FX DASHBOARD - TERMINAL MODE</title>
+    <title>USD/JPY FX DASHBOARD - WEATHER FORECAST MODE</title>
     <style>
         /* 全体デザイン設定 */
         :root {
@@ -43,6 +43,7 @@
         .header-left {
             display: flex;
             flex-direction: column;
+            min-width: 300px;
         }
 
         .title {
@@ -56,19 +57,35 @@
             margin-top: 5px;
         }
 
-        .header-right {
+        /* 予報エリア（3つのウィジェット横並び） */
+        .forecast-area {
             display: flex;
-            align-items: center;
-            gap: 20px;
+            flex: 1;
+            justify-content: flex-end;
+            gap: 10px;
+            height: 160px;
         }
 
-        /* テクニカル分析ウィジェットのコンテナ */
-        .tech-analysis-container {
-            width: 450px;
-            height: 130px;
-            overflow: hidden;
+        .forecast-card {
+            display: flex;
+            flex-direction: column;
+            width: 200px;
             border: 1px solid var(--border-color);
             background-color: #000;
+        }
+
+        .forecast-label {
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 2px 0;
+            background-color: rgba(0, 255, 0, 0.1);
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .tech-widget-container {
+            flex: 1;
+            overflow: hidden;
         }
 
         /* メインコンテンツエリア */
@@ -84,6 +101,8 @@
             flex: 2;
             border-right: 2px solid var(--border-color);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         /* カレンダーエリア */
@@ -110,7 +129,19 @@
         }
 
         /* レスポンシブ対応 */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
+            header {
+                flex-direction: column;
+                height: auto;
+                align-items: stretch;
+            }
+            .forecast-area {
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
             main {
                 flex-direction: column;
             }
@@ -119,21 +150,18 @@
                 border-right: none;
                 border-bottom: 2px solid var(--border-color);
             }
-            .calendar-section {
-                flex: 1;
+            .forecast-area {
+                flex-wrap: wrap;
+                height: auto;
             }
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .tech-analysis-container {
-                width: 100%;
-                height: 120px;
+            .forecast-card {
+                width: calc(33% - 7px);
+                min-width: 110px;
+                height: 140px;
             }
         }
 
-        /* TradingViewのコピーライトを隠す（デザイン統一のため） */
+        /* TradingViewのコピーライトを隠す */
         .tradingview-widget-copyright {
             display: none !important;
         }
@@ -143,29 +171,75 @@
 
     <header>
         <div class="header-left">
-            <div class="title">USD/JPY TERMINAL DASHBOARD v1.0</div>
+            <div class="title">USD/JPY WEATHER DASHBOARD v2.0</div>
             <div id="clock" class="clock">LOADING SYSTEM TIME...</div>
         </div>
-        <div class="header-right">
-            <div class="tech-analysis-container">
-                <!-- TradingView Widget BEGIN (Technical Analysis) -->
-                <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
-                    {
-                        "interval": "1m",
-                        "width": "100%",
-                        "isTransparent": true,
-                        "height": "100%",
-                        "symbol": "FX:USDJPY",
-                        "showIntervalTabs": false,
-                        "displayMode": "single",
-                        "locale": "ja",
-                        "colorTheme": "dark"
-                    }
-                    </script>
+        <div class="forecast-area">
+            <!-- 短期予報 -->
+            <div class="forecast-card">
+                <div class="forecast-label">⚡ 30分予報（短期）</div>
+                <div class="tech-widget-container">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                        {
+                            "interval": "30m",
+                            "width": "100%",
+                            "isTransparent": true,
+                            "height": "100%",
+                            "symbol": "FX:USDJPY",
+                            "showIntervalTabs": false,
+                            "displayMode": "single",
+                            "locale": "ja",
+                            "colorTheme": "dark"
+                        }
+                        </script>
+                    </div>
                 </div>
-                <!-- TradingView Widget END -->
+            </div>
+            <!-- 中期予報 -->
+            <div class="forecast-card">
+                <div class="forecast-label">☁ 1時間予報（中期）</div>
+                <div class="tech-widget-container">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                        {
+                            "interval": "1h",
+                            "width": "100%",
+                            "isTransparent": true,
+                            "height": "100%",
+                            "symbol": "FX:USDJPY",
+                            "showIntervalTabs": false,
+                            "displayMode": "single",
+                            "locale": "ja",
+                            "colorTheme": "dark"
+                        }
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <!-- 長期予報 -->
+            <div class="forecast-card">
+                <div class="forecast-label">☀ 4時間予報（長期）</div>
+                <div class="tech-widget-container">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                        {
+                            "interval": "4h",
+                            "width": "100%",
+                            "isTransparent": true,
+                            "height": "100%",
+                            "symbol": "FX:USDJPY",
+                            "showIntervalTabs": false,
+                            "displayMode": "single",
+                            "locale": "ja",
+                            "colorTheme": "dark"
+                        }
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -174,7 +248,6 @@
         <section class="chart-section">
             <div class="section-title">REAL-TIME CHART: USD/JPY</div>
             <div class="widget-wrapper">
-                <!-- TradingView Widget BEGIN (Advanced Chart) -->
                 <div class="tradingview-widget-container" style="height:100%;width:100%">
                     <div class="tradingview-widget-container__widget" style="height:calc(100% - 0px);width:100%"></div>
                     <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
@@ -200,14 +273,12 @@
                     }
                     </script>
                 </div>
-                <!-- TradingView Widget END -->
             </div>
         </section>
 
         <section class="calendar-section">
             <div class="section-title">ECONOMIC CALENDAR (USD/JPY)</div>
             <div class="widget-wrapper">
-                <!-- TradingView Widget BEGIN (Economic Calendar) -->
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
                     <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
@@ -222,13 +293,11 @@
                     }
                     </script>
                 </div>
-                <!-- TradingView Widget END -->
             </div>
         </section>
     </main>
 
     <script>
-        // ミリ秒まで表示する時計機能
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -246,9 +315,7 @@
 
         setInterval(updateClock, 1);
         updateClock();
-
-        // コンソール風のログ（おまけ）
-        console.log("%cUSD/JPY TERMINAL SYSTEM INITIALIZED...", "color: #00ff00; font-family: monospace; font-weight: bold;");
+        console.log("%cUSD/JPY WEATHER SYSTEM INITIALIZED...", "color: #00ff00; font-family: monospace; font-weight: bold;");
     </script>
 </body>
 </html>
