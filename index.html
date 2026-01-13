@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>USD/JPY ULTIMATE DASHBOARD v6</title>
+    <title>USD/JPY CROSS-YEN DASHBOARD v7</title>
     <style>
         :root {
             --bg-color: #000000;
@@ -71,11 +71,11 @@
             gap: 5px;
         }
 
-        /* 各ウィジェットの高さ確保（スマホでの潰れ防止） */
-        .ticker-section { height: 70px; }
-        .analysis-section { min-height: 400px; }
-        .chart-section { min-height: 500px; height: 60vh; }
-        .calendar-section { min-height: 500px; }
+        /* 各ウィジェットの高さ強制指定（スマホでの消失防止） */
+        .ticker-section { height: 46px; border-bottom: 1px solid var(--text-color); }
+        .analysis-section { height: 450px; }
+        .chart-section { height: 550px; }
+        .calendar-section { height: 450px; }
 
         .widget-container {
             width: 100%;
@@ -102,12 +102,12 @@
 <body>
 
     <header>
-        <div class="title">USD/JPY ULTIMATE v6</div>
+        <div class="title">USD/JPY CROSS-YEN v7</div>
         <div id="clock" class="clock">00:00:00</div>
     </header>
 
     <main>
-        <!-- 1. 最新レート（ティッカーテープ） -->
+        <!-- 1. 流れるティッカー（クロス円特化） -->
         <section class="ticker-section">
             <div class="widget-container">
                 <div class="tradingview-widget-container">
@@ -117,7 +117,23 @@
                         "symbols": [
                             {
                                 "proName": "FX:USDJPY",
-                                "title": "米ドル/日本円"
+                                "title": "ドル円"
+                            },
+                            {
+                                "proName": "FX:EURJPY",
+                                "title": "ユーロ円"
+                            },
+                            {
+                                "proName": "FX:GBPJPY",
+                                "title": "ポンド円"
+                            },
+                            {
+                                "proName": "FX:AUDJPY",
+                                "title": "豪ドル円"
+                            },
+                            {
+                                "proName": "FX:CHFJPY",
+                                "title": "フラン円"
                             }
                         ],
                         "showSymbolLogo": true,
@@ -131,12 +147,12 @@
             </div>
         </section>
 
-        <!-- 2. テクニカル分析メーター -->
+        <!-- 2. テクニカル分析メーター（復活） -->
         <section class="analysis-section">
             <div class="section-label"><span>⚡</span> テクニカル分析 (USD/JPY)</div>
             <div class="widget-container">
-                <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
+                <div class="tradingview-widget-container" style="height:100%;width:100%">
+                    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
                     <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
                     {
                         "interval": "15m",
@@ -190,8 +206,8 @@
         <section class="calendar-section">
             <div class="section-label"><span>📅</span> 経済指標カレンダー (日米)</div>
             <div class="widget-container">
-                <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
+                <div class="tradingview-widget-container" style="height:100%;width:100%">
+                    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
                     <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
                     {
                         "colorTheme": "dark",
