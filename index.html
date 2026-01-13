@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>USD/JPY PRO DASHBOARD - MOBILE FIRST</title>
+    <title>USD/JPY ULTIMATE DASHBOARD v6</title>
     <style>
-        /* 基本スタイル */
         :root {
             --bg-color: #000000;
             --text-color: #00ff00;
-            --border-color: #333333;
+            --accent-color: #008800;
+            --border-color: #222222;
             --font-family: 'Courier New', Courier, monospace;
         }
 
@@ -17,7 +17,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -35,68 +34,64 @@
             padding: 10px 15px;
             border-bottom: 1px solid var(--text-color);
             background: #000;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .title { font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; }
+        .title { font-size: 0.9rem; font-weight: bold; }
         .clock { font-size: 0.8rem; }
 
-        /* メインコンテンツ（縦積み） */
+        /* メインレイアウト（縦積み） */
         main {
             display: flex;
             flex-direction: column;
             width: 100%;
-            gap: 0; /* 隙間なく配置 */
         }
 
         section {
             width: 100%;
             border-bottom: 1px solid var(--border-color);
             background: #000;
+            position: relative;
         }
 
         .section-label {
             font-size: 0.7rem;
-            padding: 4px 10px;
+            padding: 5px 10px;
             background: #111;
             color: var(--text-color);
             border-bottom: 1px solid var(--border-color);
             text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        /* 1. テクニカル分析メーター（高さ固定） */
-        .analysis-section {
-            height: 380px; /* タブ切り替えを含めた高さ */
-        }
-
-        /* 2. メインチャート（画面高さの半分を確保） */
-        .chart-section {
-            height: 50vh;
-            min-height: 400px;
-        }
-
-        /* 3. 経済カレンダー */
-        .calendar-section {
-            height: 500px;
-        }
+        /* 各ウィジェットの高さ確保（スマホでの潰れ防止） */
+        .ticker-section { height: 70px; }
+        .analysis-section { min-height: 400px; }
+        .chart-section { min-height: 500px; height: 60vh; }
+        .calendar-section { min-height: 500px; }
 
         .widget-container {
             width: 100%;
             height: calc(100% - 25px); /* ラベル分を引く */
         }
 
+        /* Ticker Tape専用調整 */
+        .ticker-section .widget-container { height: 100%; }
+
         /* TradingViewロゴ隠し */
         .tradingview-widget-copyright { display: none !important; }
 
-        /* PC表示の際の微調整 */
+        /* PC表示の際の最大幅制限 */
         @media (min-width: 1024px) {
             main {
-                max-width: 800px;
+                max-width: 900px;
                 margin: 0 auto;
                 border-left: 1px solid var(--border-color);
                 border-right: 1px solid var(--border-color);
@@ -107,14 +102,38 @@
 <body>
 
     <header>
-        <div class="title">USD/JPY SYSTEM v5</div>
+        <div class="title">USD/JPY ULTIMATE v6</div>
         <div id="clock" class="clock">00:00:00</div>
     </header>
 
     <main>
-        <!-- 1. テクニカル分析メーター (1つに集約) -->
+        <!-- 1. 最新レート（ティッカーテープ） -->
+        <section class="ticker-section">
+            <div class="widget-container">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                    {
+                        "symbols": [
+                            {
+                                "proName": "FX:USDJPY",
+                                "title": "米ドル/日本円"
+                            }
+                        ],
+                        "showSymbolLogo": true,
+                        "colorTheme": "dark",
+                        "isTransparent": false,
+                        "displayMode": "adaptive",
+                        "locale": "ja"
+                    }
+                    <\/script>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. テクニカル分析メーター -->
         <section class="analysis-section">
-            <div class="section-label">Technical Analysis (FX:USDJPY)</div>
+            <div class="section-label"><span>⚡</span> テクニカル分析 (USD/JPY)</div>
             <div class="widget-container">
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
@@ -135,9 +154,9 @@
             </div>
         </section>
 
-        <!-- 2. メインチャート -->
+        <!-- 3. メインチャート -->
         <section class="chart-section">
-            <div class="section-label">Live Chart (FX:USDJPY)</div>
+            <div class="section-label"><span>📈</span> リアルタイムチャート (USD/JPY)</div>
             <div class="widget-container">
                 <div class="tradingview-widget-container" style="height:100%;width:100%">
                     <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
@@ -167,9 +186,9 @@
             </div>
         </section>
 
-        <!-- 3. 経済カレンダー -->
+        <!-- 4. 経済指標カレンダー -->
         <section class="calendar-section">
-            <div class="section-label">Economic Calendar (USD/JPY)</div>
+            <div class="section-label"><span>📅</span> 経済指標カレンダー (日米)</div>
             <div class="widget-container">
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
