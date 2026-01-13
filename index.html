@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>USD/JPY CROSS-YEN DASHBOARD v7</title>
+    <title>USD/JPY FX DASHBOARD v8</title>
     <style>
         :root {
             --bg-color: #000000;
             --text-color: #00ff00;
-            --accent-color: #008800;
             --border-color: #222222;
             --font-family: 'Courier New', Courier, monospace;
         }
@@ -45,20 +44,21 @@
         .title { font-size: 0.9rem; font-weight: bold; }
         .clock { font-size: 0.8rem; }
 
-        /* メインレイアウト（縦積み） */
-        main {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-
-        section {
-            width: 100%;
+        /* ウィジェットコンテナの高さ強制指定（バグ修正） */
+        .tradingview-widget-container {
+            height: 400px !important;
+            width: 100% !important;
             border-bottom: 1px solid var(--border-color);
             background: #000;
-            position: relative;
         }
 
+        /* Ticker Tapeだけは高さを低く設定 */
+        #ticker-container {
+            height: 50px !important;
+            border-bottom: 1px solid var(--text-color);
+        }
+
+        /* セクションラベル */
         .section-label {
             font-size: 0.7rem;
             padding: 5px 10px;
@@ -66,24 +66,7 @@
             color: var(--text-color);
             border-bottom: 1px solid var(--border-color);
             text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
-
-        /* 各ウィジェットの高さ強制指定（スマホでの消失防止） */
-        .ticker-section { height: 46px; border-bottom: 1px solid var(--text-color); }
-        .analysis-section { height: 450px; }
-        .chart-section { height: 550px; }
-        .calendar-section { height: 450px; }
-
-        .widget-container {
-            width: 100%;
-            height: calc(100% - 25px); /* ラベル分を引く */
-        }
-
-        /* Ticker Tape専用調整 */
-        .ticker-section .widget-container { height: 100%; }
 
         /* TradingViewロゴ隠し */
         .tradingview-widget-copyright { display: none !important; }
@@ -91,7 +74,7 @@
         /* PC表示の際の最大幅制限 */
         @media (min-width: 1024px) {
             main {
-                max-width: 900px;
+                max-width: 800px;
                 margin: 0 auto;
                 border-left: 1px solid var(--border-color);
                 border-right: 1px solid var(--border-color);
@@ -102,126 +85,98 @@
 <body>
 
     <header>
-        <div class="title">USD/JPY CROSS-YEN v7</div>
+        <div class="title">USD/JPY DASHBOARD v8</div>
         <div id="clock" class="clock">00:00:00</div>
     </header>
 
     <main>
-        <!-- 1. 流れるティッカー（クロス円特化） -->
-        <section class="ticker-section">
-            <div class="widget-container">
-                <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+        <!-- 1. 流れる為替ティッカー -->
+        <div id="ticker-container" class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+                "symbols": [
                     {
-                        "symbols": [
-                            {
-                                "proName": "FX:USDJPY",
-                                "title": "ドル円"
-                            },
-                            {
-                                "proName": "FX:EURJPY",
-                                "title": "ユーロ円"
-                            },
-                            {
-                                "proName": "FX:GBPJPY",
-                                "title": "ポンド円"
-                            },
-                            {
-                                "proName": "FX:AUDJPY",
-                                "title": "豪ドル円"
-                            },
-                            {
-                                "proName": "FX:CHFJPY",
-                                "title": "フラン円"
-                            }
-                        ],
-                        "showSymbolLogo": true,
-                        "colorTheme": "dark",
-                        "isTransparent": false,
-                        "displayMode": "adaptive",
-                        "locale": "ja"
+                        "proName": "FX:USDJPY",
+                        "title": "USD/JPY"
+                    },
+                    {
+                        "proName": "FX:EURJPY",
+                        "title": "EUR/JPY"
                     }
-                    <\/script>
-                </div>
-            </div>
-        </section>
+                ],
+                "showSymbolLogo": true,
+                "colorTheme": "dark",
+                "isTransparent": false,
+                "displayMode": "adaptive",
+                "locale": "ja"
+            }
+            <\/script>
+        </div>
 
-        <!-- 2. テクニカル分析メーター（復活） -->
-        <section class="analysis-section">
-            <div class="section-label"><span>⚡</span> テクニカル分析 (USD/JPY)</div>
-            <div class="widget-container">
-                <div class="tradingview-widget-container" style="height:100%;width:100%">
-                    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
-                    {
-                        "interval": "15m",
-                        "width": "100%",
-                        "isTransparent": false,
-                        "height": "100%",
-                        "symbol": "FX:USDJPY",
-                        "showIntervalTabs": true,
-                        "displayMode": "single",
-                        "locale": "ja",
-                        "colorTheme": "dark"
-                    }
-                    <\/script>
-                </div>
-            </div>
-        </section>
+        <!-- 2. テクニカル分析メーター -->
+        <div class="section-label">テクニカル分析 (USD/JPY)</div>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+            {
+                "interval": "15m",
+                "width": "100%",
+                "isTransparent": false,
+                "height": "100%",
+                "symbol": "FX:USDJPY",
+                "showIntervalTabs": true,
+                "displayMode": "single",
+                "locale": "ja",
+                "colorTheme": "dark"
+            }
+            <\/script>
+        </div>
 
         <!-- 3. メインチャート -->
-        <section class="chart-section">
-            <div class="section-label"><span>📈</span> リアルタイムチャート (USD/JPY)</div>
-            <div class="widget-container">
-                <div class="tradingview-widget-container" style="height:100%;width:100%">
-                    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-                    {
-                        "autosize": true,
-                        "symbol": "FX:USDJPY",
-                        "interval": "15",
-                        "timezone": "Asia/Tokyo",
-                        "theme": "dark",
-                        "style": "1",
-                        "locale": "ja",
-                        "enable_publishing": false,
-                        "hide_side_toolbar": false,
-                        "allow_symbol_change": false,
-                        "save_image": false,
-                        "backgroundColor": "rgba(0, 0, 0, 1)",
-                        "gridColor": "rgba(0, 255, 0, 0.05)",
-                        "studies": [
-                            "MACD@tv-basicstudies",
-                            "BB@tv-basicstudies"
-                        ],
-                        "support_host": "https://www.tradingview.com"
-                    }
-                    <\/script>
-                </div>
-            </div>
-        </section>
+        <div class="section-label">リアルタイムチャート (USD/JPY)</div>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {
+                "autosize": true,
+                "symbol": "FX:USDJPY",
+                "interval": "15",
+                "timezone": "Asia/Tokyo",
+                "theme": "dark",
+                "style": "1",
+                "locale": "ja",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": false,
+                "save_image": false,
+                "backgroundColor": "rgba(0, 0, 0, 1)",
+                "gridColor": "rgba(0, 255, 0, 0.05)",
+                "studies": [
+                    "MACD@tv-basicstudies",
+                    "BB@tv-basicstudies"
+                ],
+                "support_host": "https://www.tradingview.com"
+            }
+            <\/script>
+        </div>
 
         <!-- 4. 経済指標カレンダー -->
-        <section class="calendar-section">
-            <div class="section-label"><span>📅</span> 経済指標カレンダー (日米)</div>
-            <div class="widget-container">
-                <div class="tradingview-widget-container" style="height:100%;width:100%">
-                    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-                    {
-                        "colorTheme": "dark",
-                        "isTransparent": false,
-                        "width": "100%",
-                        "height": "100%",
-                        "locale": "ja",
-                        "importanceFilter": "0,1",
-                        "countryFilter": "jp,us"
-                    }
-                    <\/script>
-                </div>
-            </div>
-        </section>
+        <div class="section-label">経済指標カレンダー (日米)</div>
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+            {
+                "colorTheme": "dark",
+                "isTransparent": false,
+                "width": "100%",
+                "height": "100%",
+                "locale": "ja",
+                "importanceFilter": "0,1",
+                "countryFilter": "jp,us"
+            }
+            <\/script>
+        </div>
     </main>
 
     <script>
@@ -236,4 +191,4 @@
         updateClock();
     </script>
 </body>
-                </html>
+        </html>
